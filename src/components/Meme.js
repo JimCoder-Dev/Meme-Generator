@@ -1,17 +1,33 @@
 import memesData from "../memesData";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Meme = () => {
-  const [memeImage, setMemeImage] = useState({
+  const [memeImage, setAllMemes] = useState({
     topText: "",
     bottomText: "",
     randomImage: "http://imgflip.com/s/meme/Grumpy-Cat.jpg",
   });
+   // eslint-disable-next-line
+  useEffect(() =>{
+    async function fetchMemes(){
+      //Sadly the images on this API do not appear to be working hence staying with the memeData file
+      let response = await fetch("https://api.imgflip.com/get_memes")
+      let data = await response.json()
+      console.log(data.data.memes)
+    }
+   fetchMemes()
+
+   return () =>{
+
+   }
+  }, [])
+
+ 
 
   function handleClick() {
     const randomMeme = Math.floor(Math.random() * memesData.data.memes.length);
 
-    setMemeImage((prevMeme) => ({
+    setAllMemes((prevMeme) => ({
       ...prevMeme,
       randomImage: memesData.data.memes[randomMeme].image,
     }));
@@ -19,7 +35,7 @@ const Meme = () => {
 
   function handleChange(event){
     const { name, value } = event.target
-    setMemeImage(prevMeme => ({
+    setAllMemes(prevMeme => ({
       ...prevMeme,
       [name]: value
     }))
